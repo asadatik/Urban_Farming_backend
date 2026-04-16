@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  VENDOR
+  CUSTOMER
+}
+
+enum CertificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ProduceCategory {
+  VEGETABLES
+  FRUITS
+  HERBS
+  SEEDS
+  TOOLS
+  OTHER
+}
+
+model User {
+  id            String          @id @default(uuid())
+  name          String
+  email         String          @unique
+  password      String
+  role          Role            @default(CUSTOMER)
+  status        String          @default("ACTIVE")
+  createdAt     DateTime        @default(now())
+  vendorProfile VendorProfile?
+  posts         CommunityPost[]
+  orders        Order[]
+  trackings     PlantTracking[]
+}
+
+model VendorProfile {
+  id                  String              @id @default(uuid())
+  userId              String              @unique
+  user                User                @relation(fields: [userId], references: [id])
+  farmName            String
+  farmLocation        String
+  farmDescription     String?
+  certificationStatus CertificationStatus @default(PENDING)
+  produces            Produce[]
+  rentalSpaces        RentalSpace[]
+  sustainabilityCerts SustainabilityCert[]
+  orders              Order[]
+}
+
+model Produce {
+  id                  String              @id @default(uuid())
+  vendorId            String
+  vendor              VendorProfile       @relation(fields: [vendorId], references: [id])
+  name                String
+  description         String?
+  price               Float
+  category            ProduceCategory
+  certificationStatus CertificationStatus @default(PENDING)
+  availableQuantity   Int
+  imageUrl            String?             @default("https://placehold.co/600x400?text=No+Image") 
+  isActive            Boolean             @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt 
+  orders              Order[]
+}
+
+model RentalSpace {
+  id           String          @id @default(uuid())
+  vendorId     String
+  vendor       VendorProfile   @relation(fields: [vendorId], references: [id])
+  location     String
+  size         String
+  price        Float
+  availability Boolean         @default(true)
+  description  String?
+  trackings    PlantTracking[]
+}
+
+model Order {
+  id         String        @id @default(uuid())
+  userId     String
+  user       User          @relation(fields: [userId], references: [id])
+  produceId  String
+  produce    Produce       @relation(fields: [produceId], references: [id])
+  vendorId   String
+  vendor     VendorProfile @relation(fields: [vendorId], references: [id])
+  quantity   Int
+  totalPrice Float
+  status     String        @default("PENDING")
+  orderDate  DateTime      @default(now())
+}
+
+model CommunityPost {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  title       String
+  postContent String
+  tags        String[]
+  postDate    DateTime @default(now())
+}
+
+model SustainabilityCert {
+  id                  String              @id @default(uuid())
+  vendorId            String
+  vendor              VendorProfile       @relation(fields: [vendorId], references: [id])
+  certifyingAgency    String
+  certificationDate   DateTime
+  expiryDate          DateTime?
+  certificationStatus CertificationStatus @default(PENDING)
+  adminNotes          String?
+}
+
+model PlantTracking {
+  id            String      @id @default(uuid())
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  rentalSpaceId String
+  rentalSpace   RentalSpace @relation(fields: [rentalSpaceId], references: [id])
+  plantName     String
+  status        String
+  healthNotes   String?
+  plantedDate   DateTime    @default(now())
+}
