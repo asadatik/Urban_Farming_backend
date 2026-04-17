@@ -1,4 +1,4 @@
-// src/app/middlewares/error.middleware.ts
+
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { Prisma } from '@prisma/client';
@@ -11,18 +11,18 @@ export const globalErrorHandler = (
   res: Response,
   _next: NextFunction
 ): Response => {
-  // ── Operational / custom errors ──────────────────────────────
+
   if (err instanceof AppError) {
     return sendError(res, err.statusCode, err.message);
   }
 
-  // ── Zod validation errors ────────────────────────────────────
+
   if (err instanceof ZodError) {
     const messages = err.errors.map((e) => `${e.path.join('.')}: ${e.message}`);
     return sendError(res, 400, 'Validation Error', messages);
   }
 
-  // ── Prisma known request errors ──────────────────────────────
+ 
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     if (err.code === 'P2002') {
       const fields = (err.meta?.target as string[])?.join(', ') ?? 'field';
@@ -34,7 +34,6 @@ export const globalErrorHandler = (
     return sendError(res, 400, `Database error: ${err.message}`);
   }
 
-  // ── JWT errors ───────────────────────────────────────────────
   if (err.name === 'JsonWebTokenError') {
     return sendError(res, 401, 'Invalid token. Please log in again.');
   }
@@ -42,8 +41,8 @@ export const globalErrorHandler = (
     return sendError(res, 401, 'Your token has expired. Please log in again.');
   }
 
-  // ── Unhandled / programming errors ──────────────────────────
-  console.error('💥 UNHANDLED ERROR:', err);
+
+  console.error(' UNHANDLED ERROR:', err);
   return sendError(
     res,
     500,

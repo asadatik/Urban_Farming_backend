@@ -1,6 +1,5 @@
-// prisma/seed.ts
-// Seeder: 3 roles (Admin/Vendor/Customer), 10 Vendors with profiles, 100 Produces
-// Run: npx ts-node prisma/seed.ts
+
+// 3 roles Admin/Vendor/Customer, 10 Vendors with profiles, 100 Produces
 
 import { PrismaClient, Role, CertificationStatus, ProduceCategory } from '@prisma/client';
 import { faker } from '@faker-js/faker';
@@ -19,9 +18,9 @@ async function hashPassword(password: string): Promise<string> {
 }
 
 async function main() {
-  console.log('🌱 Starting database seed...');
+  console.log(' Starting database seed...');
 
-  // ── Clean existing data ────────────────────────────────────────
+  // Clean existing data 
   await prisma.plantTracking.deleteMany();
   await prisma.sustainabilityCert.deleteMany();
   await prisma.communityPost.deleteMany();
@@ -32,7 +31,7 @@ async function main() {
   await prisma.user.deleteMany();
   console.log('✅ Cleaned existing data');
 
-  // ── Seed Admin ─────────────────────────────────────────────────
+  // Admin
   const adminUser = await prisma.user.create({
     data: {
       name: 'Platform Admin',
@@ -42,9 +41,9 @@ async function main() {
       status: 'ACTIVE',
     },
   });
-  console.log(`✅ Admin created: ${adminUser.email}`);
+  console.log(`Admin created: ${adminUser.email}`);
 
-  // ── Seed Demo Customer ─────────────────────────────────────────
+  //  Demo Customer 
   const demoCustomer = await prisma.user.create({
     data: {
       name: 'Demo Customer',
@@ -55,7 +54,7 @@ async function main() {
     },
   });
 
-  // ── Seed 10 Vendors with Profiles ─────────────────────────────
+  // 10 Vendors with Profiles 
   const vendors: { userId: string; profileId: string }[] = [];
 
   for (let i = 0; i < 10; i++) {
@@ -117,10 +116,10 @@ async function main() {
     }
 
     vendors.push({ userId: vendorUser.id, profileId: profile.id });
-    console.log(`✅ Vendor ${i + 1}/10: ${vendorUser.email} — Profile: ${profile.farmName}`);
+    console.log(`Vendor ${i + 1}/10: ${vendorUser.email} — Profile: ${profile.farmName}`);
   }
 
-  // ── Seed 100 Produce Items ─────────────────────────────────────
+  //100 Produce Items
   const produceNames: Record<ProduceCategory, string[]> = {
     VEGETABLES: ['Tomato', 'Spinach', 'Kale', 'Lettuce', 'Carrot', 'Broccoli', 'Cucumber', 'Bell Pepper'],
     FRUITS: ['Strawberry', 'Blueberry', 'Lemon', 'Apple', 'Mango', 'Avocado', 'Watermelon'],
@@ -152,9 +151,9 @@ async function main() {
     });
     allProduceIds.push(produce.id);
   }
-  console.log('✅ 100 Produce items seeded');
+  console.log(' 100 Produce items seeded');
 
-  // ── Seed 20 Community Posts ────────────────────────────────────
+  // 20 Community Posts 
   const allUserIds = [adminUser.id, demoCustomer.id, ...vendors.map((v) => v.userId)];
   for (let i = 0; i < 20; i++) {
     await prisma.communityPost.create({
@@ -169,9 +168,9 @@ async function main() {
       },
     });
   }
-  console.log('✅ 20 Community posts seeded');
+  console.log(' 20 Community posts seeded');
 
-  // ── Seed 15 Sample Orders ──────────────────────────────────────
+  //  15 Sample Orders 
   for (let i = 0; i < 15; i++) {
     const vendorIndex = faker.number.int({ min: 0, max: vendors.length - 1 });
     const vendor = vendors[vendorIndex];
@@ -192,9 +191,9 @@ async function main() {
       },
     });
   }
-  console.log('✅ 15 Orders seeded');
+  console.log(' 15 Orders seeded');
 
-  // ── Seed Plant Trackings ───────────────────────────────────────
+  //  Plant Tracking
   const allRentalSpaces = await prisma.rentalSpace.findMany({ take: 10 });
   for (let i = 0; i < 8; i++) {
     if (!allRentalSpaces[i]) continue;
@@ -209,9 +208,9 @@ async function main() {
       },
     });
   }
-  console.log('✅ Plant trackings seeded');
+  console.log(' Plant trackings seeded');
 
-  console.log('\n🎉 Seed complete! Login credentials:');
+  console.log(' Seed complete! Login credentials:');
   console.log('   Admin    → admin@urbanfarming.com    / Admin@1234');
   console.log('   Customer → customer@urbanfarming.com / Customer@1234');
   console.log('   Vendors  → (see DB) password: Vendor@1234');
@@ -219,7 +218,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Seed failed:', e);
+    console.error('Seed failed:', e);
     process.exit(1);
   })
   .finally(async () => {

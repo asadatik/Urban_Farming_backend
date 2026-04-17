@@ -36,6 +36,7 @@ model User {
   role          Role            @default(CUSTOMER)
   status        String          @default("ACTIVE")
   createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
   vendorProfile VendorProfile?
   posts         CommunityPost[]
   orders        Order[]
@@ -54,6 +55,8 @@ model VendorProfile {
   rentalSpaces        RentalSpace[]
   sustainabilityCerts SustainabilityCert[]
   orders              Order[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now()) @updatedAt
 }
 
 model Produce {
@@ -66,10 +69,10 @@ model Produce {
   category            ProduceCategory
   certificationStatus CertificationStatus @default(PENDING)
   availableQuantity   Int
-  imageUrl            String?             @default("https://placehold.co/600x400?text=No+Image") 
+  imageUrl            String?             @default("https://placehold.co/600x400?text=No+Image")
   isActive            Boolean             @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt 
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now()) @updatedAt
   orders              Order[]
 }
 
@@ -82,6 +85,8 @@ model RentalSpace {
   price        Float
   availability Boolean         @default(true)
   description  String?
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @default(now()) @updatedAt
   trackings    PlantTracking[]
 }
 
@@ -97,6 +102,8 @@ model Order {
   totalPrice Float
   status     String        @default("PENDING")
   orderDate  DateTime      @default(now())
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @default(now()) @updatedAt
 }
 
 model CommunityPost {
@@ -107,6 +114,8 @@ model CommunityPost {
   postContent String
   tags        String[]
   postDate    DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
 }
 
 model SustainabilityCert {
@@ -118,6 +127,8 @@ model SustainabilityCert {
   expiryDate          DateTime?
   certificationStatus CertificationStatus @default(PENDING)
   adminNotes          String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @default(now()) @updatedAt
 }
 
 model PlantTracking {
@@ -130,4 +141,7 @@ model PlantTracking {
   status        String
   healthNotes   String?
   plantedDate   DateTime    @default(now())
+  harvestDate   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now()) @updatedAt
 }

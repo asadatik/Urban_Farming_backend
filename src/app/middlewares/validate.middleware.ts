@@ -1,12 +1,8 @@
-// src/app/middlewares/validate.middleware.ts
+
 import { Request, Response, NextFunction } from 'express';
 import { AnyZodObject, ZodError } from 'zod';
 import { sendError } from '../utils/response';
 
-/**
- * validate(schema) — validates req.body against a Zod schema.
- * On failure, returns 400 with field-level error messages.
- */
 export const validate =
   (schema: AnyZodObject) =>
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {

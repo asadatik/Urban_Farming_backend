@@ -1,4 +1,4 @@
-// src/app/modules/produce/produce.service.ts
+
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../utils/prisma';
 import { AppError } from '../../utils/AppError';
@@ -14,10 +14,7 @@ export interface ProduceFilters {
 }
 
 export const produceService = {
-  /**
-   * Public marketplace: paginated + filtered produce listing.
-   * Only shows APPROVED + active items to the public.
-   */
+// Public
   async getMarketplace(pagination: PaginationParams, filters: ProduceFilters) {
     const where: Prisma.ProduceWhereInput = {
       isActive: true,
@@ -67,7 +64,7 @@ export const produceService = {
     return { produces, total };
   },
 
-  /** Get a single produce by ID (public) */
+// Vendor Get produce details by ID
   async getProduceById(id: string) {
     const produce = await prisma.produce.findUnique({
       where: { id },
@@ -80,8 +77,7 @@ export const produceService = {
     if (!produce) throw new AppError('Produce not found.', 404);
     return produce;
   },
-
-  /** Vendor: list own produce */
+// Vendor Get all produce listings for a vendor
   async getVendorProduce(vendorProfileId: string, pagination: PaginationParams) {
     const [produces, total] = await Promise.all([
       prisma.produce.findMany({
@@ -95,14 +91,13 @@ export const produceService = {
     return { produces, total };
   },
 
-  /** Vendor: create a produce listing */
+// Create new produce listing
   async createProduce(vendorProfileId: string, data: CreateProduceInput) {
     return prisma.produce.create({
       data: { ...data, vendorId: vendorProfileId, certificationStatus: 'PENDING' },
     });
   },
-
-  /** Vendor: update own produce */
+// Update produce listing
   async updateProduce(id: string, vendorProfileId: string, data: UpdateProduceInput) {
     const produce = await prisma.produce.findUnique({ where: { id } });
     if (!produce) throw new AppError('Produce not found.', 404);
@@ -112,7 +107,7 @@ export const produceService = {
     return prisma.produce.update({ where: { id }, data });
   },
 
-  /** Vendor: delete own produce */
+// Delete produce listing
   async deleteProduce(id: string, vendorProfileId: string) {
     const produce = await prisma.produce.findUnique({ where: { id } });
     if (!produce) throw new AppError('Produce not found.', 404);
@@ -122,7 +117,7 @@ export const produceService = {
     return { id };
   },
 
-  /** Admin: approve / reject a produce */
+// Admin
   async updateCertificationStatus(
     id: string,
     certificationStatus: 'APPROVED' | 'REJECTED' | 'PENDING'
@@ -132,7 +127,7 @@ export const produceService = {
     return prisma.produce.update({ where: { id }, data: { certificationStatus } });
   },
 
-  /** Helper: resolve the vendor profile ID from a user ID */
+//get vendor profile id by user id 
   async getVendorProfileId(userId: string): Promise<string> {
     const profile = await prisma.vendorProfile.findUnique({ where: { userId } });
     if (!profile)

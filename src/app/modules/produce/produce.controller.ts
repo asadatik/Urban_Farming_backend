@@ -1,11 +1,11 @@
-// src/app/modules/produce/produce.controller.ts
+
 import { Request, Response, NextFunction } from 'express';
 import { produceService } from './produce.service';
 import { sendSuccess } from '../../utils/response';
 import { getPagination } from '../../utils/pagination';
 
 export const produceController = {
-  // ── Public ────────────────────────────────────────────────────
+  // Public
 
   async getMarketplace(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -37,7 +37,7 @@ export const produceController = {
     }
   },
 
-  // ── Vendor ────────────────────────────────────────────────────
+  //  Vendor 
 
   async getMyProduce(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -84,7 +84,7 @@ export const produceController = {
     }
   },
 
-  // ── Admin ─────────────────────────────────────────────────────
+  // Admin
 
   async updateCertificationStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

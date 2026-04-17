@@ -1,4 +1,4 @@
-// src/app/modules/auth/auth.service.ts
+
 import { prisma } from '../../utils/prisma';
 import { hashPassword, comparePassword } from '../../utils/bcrypt';
 import { signToken } from '../../utils/jwt';
@@ -7,10 +7,7 @@ import { SignupInput, LoginInput } from './auth.validation';
 import { AuthTokenResponse } from './auth.interface';
 
 export const authService = {
-  /**
-   * Register a new user.
-   * Vendors get a pending VendorProfile created automatically.
-   */
+
   async signup(payload: SignupInput): Promise<AuthTokenResponse> {
     const existing = await prisma.user.findUnique({
       where: { email: payload.email },
@@ -25,7 +22,7 @@ export const authService = {
         email: payload.email,
         password: hashedPassword,
         role: payload.role ?? 'CUSTOMER',
-        // Auto-create a pending VendorProfile for VENDOR sign-ups
+     
         ...(payload.role === 'VENDOR' && {
           vendorProfile: {
             create: {
@@ -54,7 +51,7 @@ export const authService = {
   },
 
   /**
-   * Login with email + password.
+   * Login
    */
   async login(payload: LoginInput): Promise<AuthTokenResponse> {
     const user = await prisma.user.findUnique({
@@ -91,7 +88,7 @@ export const authService = {
   },
 
   /**
-   * Get own profile (used by /me endpoint).
+   * Get own profile 
    */
   async getMe(userId: string) {
     const user = await prisma.user.findUnique({

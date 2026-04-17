@@ -8,16 +8,15 @@ import { globalErrorHandler } from './app/middlewares/error.middleware';
 
 const app: Application = express();
 
-// Global Middlewares
+// Middlewares
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Main Routes
-app.use('/api/v1', router);
 
-// Health Check
+app.use('/api/v1', router)
+;
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,

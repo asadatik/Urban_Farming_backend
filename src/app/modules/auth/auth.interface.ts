@@ -1,4 +1,4 @@
-// src/app/modules/auth/auth.interface.ts
+
 export interface SignupPayload {
   name: string;
   email: string;

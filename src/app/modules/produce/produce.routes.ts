@@ -1,4 +1,4 @@
-// src/app/modules/produce/produce.routes.ts
+
 import { Router } from 'express';
 import { produceController } from './produce.controller';
 import { authenticate } from '../../middlewares/auth.middleware';
@@ -8,11 +8,11 @@ import { createProduceSchema, updateProduceSchema } from './produce.validation';
 
 const router = Router();
 
-// ── Public routes ─────────────────────────────────────────────
+//  Public
 router.get('/', produceController.getMarketplace);
 router.get('/:id', produceController.getProduceById);
 
-// ── Vendor routes ─────────────────────────────────────────────
+//Vendor routes
 router.get('/my/listings', authenticate, authorise('VENDOR'), produceController.getMyProduce);
 router.post(
   '/',
@@ -30,7 +30,7 @@ router.patch(
 );
 router.delete('/:id', authenticate, authorise('VENDOR'), produceController.deleteProduce);
 
-// ── Admin routes ──────────────────────────────────────────────
+// Admin routes
 router.patch(
   '/:id/certification',
   authenticate,
