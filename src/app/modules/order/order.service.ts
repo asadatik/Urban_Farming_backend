@@ -4,7 +4,7 @@ import { AppError } from '../../utils/AppError';
 import { PaginationParams } from '../../utils/pagination';
 
 export const orderService = {
-// Customer/ place a new order
+//  place a new order
   async placeOrder(userId: string, produceId: string, quantity: number) {
     const produce = await prisma.produce.findUnique({ where: { id: produceId } });
     if (!produce) throw new AppError('Produce not found.', 404);

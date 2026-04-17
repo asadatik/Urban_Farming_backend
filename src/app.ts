@@ -24,7 +24,6 @@ app.get('/', (req: Request, res: Response) => {
   });
 });
 
-// Error Handling Middleware
 app.use(globalErrorHandler);
 
 export default app;

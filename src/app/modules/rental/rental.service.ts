@@ -10,9 +10,8 @@ export interface RentalFilters {
   maxPrice?: string;
   availability?: string;
 }
-
 export const rentalService = {
-  // Get rental spaces with optional filters and pagination
+  // get rental spaces with optional filters and pagination
   async getRentalSpaces(pagination: PaginationParams, filters: RentalFilters) {
     const where: Prisma.RentalSpaceWhereInput = {
       ...(filters.availability !== undefined && {

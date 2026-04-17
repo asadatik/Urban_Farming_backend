@@ -7,7 +7,6 @@ let server: Server;
 
 async function bootstrap() {
   try {
-    // Prothome DB connect 
     await prisma.$connect();
     console.log(' Database connected successfully');
 

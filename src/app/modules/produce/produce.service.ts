@@ -92,11 +92,17 @@ export const produceService = {
   },
 
 // Create new produce listing
-  async createProduce(vendorProfileId: string, data: CreateProduceInput) {
-    return prisma.produce.create({
-      data: { ...data, vendorId: vendorProfileId, certificationStatus: 'PENDING' },
-    });
-  },
+async createProduce(vendorProfileId: string, data: CreateProduceInput) {
+  return prisma.produce.create({
+    data: {
+      ...data,
+      certificationStatus: 'PENDING',
+      vendor: {
+        connect: { id: vendorProfileId }
+      }
+    } as any,
+  });
+},
 // Update produce listing
   async updateProduce(id: string, vendorProfileId: string, data: UpdateProduceInput) {
     const produce = await prisma.produce.findUnique({ where: { id } });

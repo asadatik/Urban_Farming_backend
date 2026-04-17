@@ -16,7 +16,7 @@ export const trackingService = {
       plantedDate?: string;
     }
   ) {
-    // Verify the rental space exists
+    // verify the rental space exists
     const space = await prisma.rentalSpace.findUnique({ where: { id: data.rentalSpaceId } });
     if (!space) throw new AppError('Rental space not found.', 404);
     if (!space.availability) throw new AppError('This rental space is not currently available.', 400);
@@ -36,7 +36,7 @@ export const trackingService = {
     });
   },
 
-// Get all tracking records for the authenticated user, with optional status filter and pagination
+// get all tracking records for the authenticated user, with optional status filter and pagination
   async getMyTrackings(userId: string, pagination: PaginationParams, status?: string) {
     const where = { userId, ...(status && { status: status as any }) };
     const [trackings, total] = await Promise.all([
@@ -66,7 +66,7 @@ export const trackingService = {
     return tracking;
   },
 
-  
+
 // update the status and optionally health notes 
   async updateTrackingStatus(
     id: string,
